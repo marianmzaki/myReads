@@ -25,10 +25,28 @@ class BookSearch  extends React.Component {
     // if there is result update the sate of the search results - books returned. if empty update it will empty array.
     if (query) {
       console.log(query);
-      BooksAPI.search(query.trim(), 20).then(books => {
-        books.length > 0
-          ? this.setState({ searchResult: books })
-          : this.setState({ searchResult: [] });
+      BooksAPI.search(query.trim(), 20).then(returnedBooks => {
+        /*returnedBooks.length > 0
+          ? this.setState({ searchResult: returnedBooks })
+          : this.setState({ searchResult: [] });*/
+
+          if (returnedBooks.length > 0)
+          {
+            // if the search result is not empty then loop on the returned result and loop on the the books on shelf
+            // if both are equal update the shelf value if not ignore changing. 
+            this.setState({ searchResult:              
+                returnedBooks.map(book => {
+                  this.props.books.map(b => {
+                    if (b.id === book.id) {
+                      book.shelf = b.shelf;
+                    }
+                    return b;
+                  });
+                  return book;
+            })})
+          }
+          else
+            this.setState({ searchResult: [] });
       });
     } 
     else
@@ -65,7 +83,7 @@ class BookSearch  extends React.Component {
               <h3>Search returned {this.state.searchResult.length} books </h3>
               <ol className="books-grid">
                 {this.state.searchResult.map(book => (
-                        <Book key={book.id} book={book} shelf={book.shelf} changeShelf={this.props.changeShelf} />
+                        <Book key={book.id} book={book} shelf={book.shelf ? book.shelf : 'none'} changeShelf={this.props.changeShelf} />
                   ))}
               </ol>
             </div>

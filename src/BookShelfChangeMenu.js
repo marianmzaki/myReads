@@ -18,7 +18,7 @@ const BookShelfChangeMenu = (props) =>
     return(
             <div className="book-shelf-changer">
 		        {/* Define a dropdownlist to handle moving books between shelves.*/}
-                <select value={props.book.shelf} onChange={handleChange}>
+                <select value={props.book.shelf? props.book.shelf : "none"} onChange={handleChange}>
                     <option value="move" disabled>
                         Move to...
                     </option>
